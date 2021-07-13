@@ -1,5 +1,21 @@
 import java.util.Map;
 import java.awt.Polygon;
+
+String imgName = "img.jpg";
+int N = 1000;
+int point_radius = 1;
+
+ArrayList<Point> points;
+Grid g;
+float chunkwidth = 50;
+PImage img;
+int b = 2;
+boolean drawImg = false;
+boolean showPoints = false;
+boolean drawRect = false;
+boolean noBorder = false;
+float pMouseX, pMouseY, dx, dy;
+
 class Grid {
   ArrayList<ArrayList<ArrayList<Point>>> grid;
   float w; 
@@ -50,6 +66,41 @@ class Grid {
         }
       }
     }
+  }
+  ArrayList<Point> getSurroundingChunkPoints(Point p, int b) {
+    ArrayList<Point> res = new ArrayList<Point>();
+    for (int i = 0; i < grid.size(); i++) {
+      float limYmin = i * chunkWidth - chunkWidth;
+      float limYmax = i * chunkWidth;
+      for(int j = 0; j < grid.get(i).size(); j++) {
+        float limXmin = j * chunkWidth - chunkWidth;
+        float limXmax = j * chunkWidth;
+        if(limXmin <= p.x && limYmin <= p.y && limXmax > p.x && limYmax > p.y) {
+          for(int r = i-b; r < i + b+1; r++) {
+            for(int c = j-b; c < j+b+1; c++) {
+              if (r > grid.size()) continue;
+              if (c > grid.get(0).size()) continue;
+              res.addAll(grid.get(r).get(c));
+            }
+          }
+        }
+      }
+    }
+    return res;
+  }
+  ArrayList<Point> getChunkPoints(Point p) {
+    for (int i = 0; i < grid.size(); i++) {
+      float limYmin = i * chunkWidth - chunkWidth;
+      float limYmax = i * chunkWidth;
+      for(int j = 0; j < grid.get(i).size(); j++) {
+        float limXmin = j * chunkWidth - chunkWidth;
+        float limXmax = j * chunkWidth;
+        if(limXmin <= p.x && limYmin <= p.y && limXmax > p.x && limYmax > p.y) {
+          return grid.get(i).get(j);
+        }
+      }
+    }
+    return null;
   }
   void draw() {
     if (visible) {
@@ -310,29 +361,17 @@ class LineFunc {
   }
 }
 
-ArrayList<Point> points;
-Grid g;
-float chunkwidth = 50;
-PImage img;
-int N = 500;
-int b = 2;
-boolean drawImg = false;
-boolean showPoints = false;
-boolean drawRect = false;
-boolean noBorder = false;
-float pMouseX, pMouseY, dx, dy;
 
 void setup() {
-  img = loadImage("img.jpg");
+  img = loadImage(imgName);
   size(1000,500);
   img.resize(width,0);
   if (img.height > height) img.resize(0,height);
-  N = 1000;
   points = new ArrayList<Point>();
   for(int i = 0; i < N; i++) {
     Point p;
     while(true) {
-      p = new Point(random(img.width + 100) - 50, random(img.height + 100) - 50,4);
+      p = new Point(random(img.width + 100) - 50, random(img.height + 100) - 50,point_radius);
       boolean b = true;
       for(int j = 0; j < points.size(); j++) {
         Point p2 = points.get(j);
@@ -359,7 +398,9 @@ void setup() {
       Point cp = new Point(x, y);
       color c = img.get(x,y);
       Colour cc = new Colour(c);
-      for(Point p: points) {
+      ArrayList<Point> s = g.getSurroundingChunkPoints(cp, 1);
+      if (s == null) s = points;
+      for(Point p: s) {
         if (p.approxPointInPolygon(cp)) {
           p.colours.add(cc);
         }
@@ -407,6 +448,14 @@ void draw() {
       }
     }
   }
+  ArrayList<Point> subset = g.getChunkPoints(mouse);
+  if (subset != null) {
+    for(Point p: subset) {
+      fill(255);
+      p.draw();
+    }
+  }
+
   noFill();
   g.draw();
   if(drawRect) rect(0,0,img.width,img.height);
@@ -435,7 +484,7 @@ void keyPressed() {
   }
   if (key == ' ') {
     PImage i = get(0,0,img.width,img.height);
-    String filename = String.format("%04d%02d%02d_%02d%02d%02d.jpg", year(), month(), day(), hour(), minute(), second());
+    String filename = String.format("%04d%02d%02d_%02d%02d%02d_%05d.jpg", year(), month(), day(), hour(), minute(), second(),N);
     i.save(filename);
   }
 }
