@@ -491,6 +491,28 @@ void keyPressed() {
 void mousePressed() {
   pMouseX = mouseX;
   pMouseY = mouseY;
+  Point mouse = new Point(mouseX-dx, mouseY-dy);
+  for(int i = 0; i < points.size(); i++) {
+    Point p = points.get(i);
+    if (p.centerDistanceFrom(mouse) < p.r) {
+      for(int j = 0; j < p.polygon.size(); j++) {
+        Point v = p.polygon.get(j);
+        p.colours = new ArrayList<Colour>();
+        for(int x = 0; x < img.width; x++) {
+          for(int y = 0; y < img.width; y++) {
+            if (p.approxPointInPolygon(new Point(x ,y))) p.colours.add(new Colour(img.get(x,y)));
+          }
+        }
+        Colour c = new Colour();
+        for(Colour cc: p.colours) {
+          c.r += cc.r;
+          c.g += cc.g;
+          c.b += cc.b;
+        }
+        p.polygon_color = color(c.r/p.colours.size(), c.g / p.colours.size(), c.b / p.colours.size());
+      }
+    }
+  }
 }
 
 void mouseDragged() {
