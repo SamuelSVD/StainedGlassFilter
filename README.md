@@ -1,5 +1,5 @@
-# ProcessingMarbling
-This Processing project converts an input image into a corresponding "Marbled" image.
+# Stained Glass Filter
+This Processing project converts an input image into a corresponding "Stained Glass" image.
 
 You can specify the number of polygons to place randomly inside of the photo. This value can be `N`.
 
@@ -14,6 +14,6 @@ Original | <img src='https://user-images.githubusercontent.com/36249705/12538102
 Description | Image
 --- | ---
 Original | <img src='https://user-images.githubusercontent.com/36249705/125381414-d92efc00-e361-11eb-88a5-04704324310d.jpg' width=300>
-Marbled | <img src='https://user-images.githubusercontent.com/36249705/125381430-de8c4680-e361-11eb-85c5-56e90afa2ff4.jpg' width=300>
+Stained Glass Image | <img src='https://user-images.githubusercontent.com/36249705/125381430-de8c4680-e361-11eb-85c5-56e90afa2ff4.jpg' width=300>
 
 Thanks to Derek Arts for helping with designing an algorithm to make this possible! This was a fun challenge.
