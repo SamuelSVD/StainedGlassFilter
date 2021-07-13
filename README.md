@@ -16,4 +16,4 @@ Description | Image
 Original | <img src='https://user-images.githubusercontent.com/36249705/125381414-d92efc00-e361-11eb-88a5-04704324310d.jpg' width=300>
 Marbled | <img src='https://user-images.githubusercontent.com/36249705/125381430-de8c4680-e361-11eb-85c5-56e90afa2ff4.jpg' width=300>
 
-
+Thanks to Derek Arts for helping with designing an algorithm to make this possible! This was a fun challenge.
